@@ -8,6 +8,13 @@ server.listen(port);
 if (module.hot) {
 
     module.hot.accept('./listener.js', () => {
-        console.log("***Change detected but not applied***");
+        var newListener = require('./listener.js');
+
+        server.close(() => {
+            server = http.createServer(newListener)
+            server.listen(port);
+
+            console.log("***Change detected and applied***");    
+        });
     });
   }
